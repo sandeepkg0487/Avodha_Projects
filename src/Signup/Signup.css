@@ -1,0 +1,5 @@
+@media screen and (max-width:758px){
+    .signup{
+      flex-direction: column-reverse;
+    }
+}
