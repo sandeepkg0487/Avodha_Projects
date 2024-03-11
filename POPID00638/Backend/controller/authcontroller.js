@@ -12,12 +12,21 @@ async function registercontroll(req, res, next) {
 
     console.log(username, password);
     try {
+
         const hashedPassword = await bcrypt.hash(password, 10);
         console.log(hashedPassword);
         const user = new usermodel({ username: username, password: hashedPassword, email: email })
         await user.save();
-        res.json("registerd successfully");
 
+       //create token after signup
+        const token = generateJWT(user)
+        res.status(201)
+        .json({
+            message: "Register Successful",
+            email: user.email,
+            token,
+        });
+       
     } catch (err) {
         console.log("error happend in register function", err);
         res.status(300).json({ err: err })
@@ -60,8 +69,7 @@ const logincontroll = async (req, res, next) => {
         const token = generateJWT(user)
         console.log("token:", token);
         //SEND RESPONSE
-        res
-            .status(200)
+        res.status(200)
             .json({
                 message: "Login Successful",
                 email: user.email,
